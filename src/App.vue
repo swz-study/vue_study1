@@ -2,7 +2,7 @@
     <div class="app-container">
 
         <!-- 顶部 Header 区域 -->
-        <mt-header fixed title="黑马程序员·Vue项目"></mt-header>
+        <mt-header fixed title="Vue项目"></mt-header>
 
 
         <!-- 中间的 路由 router-view 区域 -->
@@ -23,7 +23,7 @@
             </router-link>
             <router-link class="mui-tab-item-llb" to="/shopcar">
 				<span class="mui-icon mui-icon-extra mui-icon-extra-cart">
-					<span class="mui-badge">0</span>
+					<span class="mui-badge" id="badge">0</span>
 				</span>
                 <span class="mui-tab-label">购物车</span>
             </router-link>

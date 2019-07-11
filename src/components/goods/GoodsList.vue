@@ -1,38 +1,65 @@
 <template>
     <div class="goods-list">
-        <div class="goods-item">
-            <img src="https://img1.360buyimg.com/imgb/s250x250_jfs/t1/34432/29/7582/73649/5cc7e1f0E36152eee/3092d011929ee449.jpg"
+        <router-link class="goods-item" v-for="item in goodslist" :key="item.id" :to="'/home/goodsinfo/'+item.id"
+        tag="div">
+            <img :src="item.img_url"
             alt="">
-            <h1 class="title"> 数据线 </h1>
+            <h1 class="title"> {{item.title}} </h1>
             <div class="info">
                 <p class="price">
-                    <span class="now">232</span>
-                    <span class="old">500</span>
+                    <span class="now">${{item.sell_price}}</span>
+                    <span class="old">${{item.market_price}}</span>
                 </p>
                 <p class="sell">
                     <span>热卖中</span>
-                    <span>剩60件</span>
+                    <span>剩{{item.stock_quantity}}件</span>
                 </p>
             </div>
-        </div>
+        </router-link>
+        <mt-button type="danger" size="large" @click="getMore">加载更多</mt-button>
     </div>
 </template>
 
 <script>
     export default {
-        name: "GoodsList"
+        data(){
+            return{
+                pageIndex: 1,
+                goodslist:[]
+            };
+        },
+        created(){
+            this.getGoodsList();
+        },
+        methods: {
+            getGoodsList() { //获取轮播图数据的方法
+                this.$http.get('api/getgoods?pageindex='+this.pageIndex).then(result => {
+                    // console.log(result.body);
+                    if (result.body.status === 0) {
+                        this.goodslist = this.goodslist.concat(result.body.message);
+                    } else {
+                        Toast('加载轮播图失败');
+                    }
+                });
+            },
+            getMore(){
+                this.pageIndex++;
+                this.getGoodsList() ;
+            }
+        }
     }
 </script>
 
 <style lang="scss" scoped>
     .goods-list{
-        dispaly:flex;
-        flex-wrap:wrap;
-        padding:8px;
-        justify-content:space-between ;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 7px;
+        justify-content: space-between;
+
         .goods-item{
             width: 49%;
-            border:1px solid #ccc;
+            border: 1px solid #ccc;
             box-shadow: 0 0 8px #ccc;
             margin: 4px 0;
             padding: 2px;
@@ -46,11 +73,12 @@
             .title{
                 font-size: 14px;
             }
+
             .info{
                 background-color: #eee;
                 p{
                     margin: 0;
-                    padding:5px;
+                    padding: 5px;
                 }
                 .price{
                     .now{
@@ -65,9 +93,9 @@
                     }
                 }
                 .sell{
-                display: flex;
+                    display: flex;
                     justify-content: space-between;
-                    font-size: 12px;
+                    font-size: 13px;
                 }
             }
         }
